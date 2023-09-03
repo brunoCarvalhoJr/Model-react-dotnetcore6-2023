@@ -3,14 +3,14 @@ import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
 //importa todos os arquivos Slices
 import { useDispatch } from "react-redux";
 
-import { stores } from "../shared/imports";
+import { slices } from "../shared/imports";
 
 const makeSlice = () => {
     const refactReducers: any = [];
     //retira todos os slices dos componentes importados
-    stores.keys().forEach((Name: string) => {
-        const module = stores(Name);
-        const reducer = stores(Name).default;
+    slices.keys().forEach((Name: string) => {
+        const module = slices(Name);
+        const reducer = slices(Name).default;
         refactReducers.push({
             name: module.slice.name,
             reducer,
@@ -28,6 +28,7 @@ const makeSlice = () => {
         newReducers[nameReducer] = prop.reducer;
     }
 
+    console.log("newReducers: ", newReducers);
     return newReducers;
 };
 export const store = configureStore({

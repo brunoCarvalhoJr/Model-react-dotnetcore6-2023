@@ -13,27 +13,26 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import { loginAuth } from "../redux/auth.store";
+import { setCredentials } from "../redux/auth.slice";
+import { useLoginMutation } from "../service/auth.apiSlice";
+import type { ILoginRequest } from "../service/auth.apiSlice";
+/*import { ProtectedComponent } from "./ProtectedComponent";*/
 
 const defaultTheme = createTheme();
 
-type login = {
-    email: string;
-    password: string;
-};
-
 export const LoginPage: React.FC = () => {
-    const [formState, setFormState] = React.useState<login>({
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const [formState, setFormState] = React.useState<ILoginRequest>({
         email: "",
         password: "",
     });
 
-    const dispatch = useDispatch();
-    /*const handleChange = ({
-        target: { name, value },
-    }: React.ChangeEvent<HTMLInputElement>) =>
-        setFormState((prev) => ({ ...prev, [name]: value }));*/
+    const [login, { isLoading }] = useLoginMutation();
+    console.log("isLoading: ", isLoading);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
@@ -43,11 +42,13 @@ export const LoginPage: React.FC = () => {
         });
     };
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
+        const user = await login(formState).unwrap();
+        console.log("user: ", user);
         console.log("formState: ", formState);
-        const dto: any = formState;
-        dispatch(loginAuth(dto));
+        dispatch(setCredentials(user));
+        navigate("/");
     };
 
     return (

@@ -7,13 +7,13 @@ const routes = require.context(
     /.route./,
 );
 
-const stores = require.context(
+const slices = require.context(
     // O caminho relativo da pasta
     "../modules",
     // Se deve ou não olhar subpastas
     true,
     // Expressão regular para localizar nomes
-    /.store./,
+    /.slice./,
 );
 
-export { routes, stores };
+export { routes, slices };
